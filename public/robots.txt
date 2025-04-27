@@ -1,0 +1,4 @@
+Contenu:
+User-agent: *
+Allow: /
+Sitemap: https://beerdle.vercel.app/sitemap_index.html
