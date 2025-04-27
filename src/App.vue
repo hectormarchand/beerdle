@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import GameComponent from "@/components/GameComponent.vue";
 import BeerIcon from "./components/icons/BeerIcon.vue";
+import { Analytics } from "@vercel/analytics/vue";
 </script>
 
 <template>
+  <Analytics />
   <header>
     <BeerIcon class="beer-icon" />
     <h1>Beerdle !</h1>
