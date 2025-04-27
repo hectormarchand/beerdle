@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BeerGlassComponent from "@/components/BeerGlassComponent.vue";
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import UpArrowIcon from "./icons/UpArrowIcon.vue";
 import EqualIcon from "./icons/EqualIcon.vue";
 import { useConfetti } from "@/composables/useConfetti";
@@ -35,7 +35,7 @@ function doAttempt(): void {
   }
   attempt.value  = +attempt.value;
 
-  const guessedRight = centiliters.value === attempt.value;
+  guessedRight.value = centiliters.value === attempt.value;
   attemptCounts.value = attemptCounts.value + 1;
 
   // Update history
@@ -49,7 +49,7 @@ function doAttempt(): void {
 
   attempt.value = undefined;
 
-  if (guessedRight) {
+  if (guessedRight.value) {
     confetti?.start();
   }
 }
@@ -82,13 +82,20 @@ function getClue(attempt: number): HistoryEntryType["clue"] {
 const centiliters: Ref<number> = import.meta.env.DEV ? ref(Math.floor(Math.random() * 40 + 10)) : ref(getCentilitersOfTheDay());
 const attemptCounts: Ref<number> = ref(0);
 const attempt: Ref<number | undefined> = ref();
+const guessedRight: Ref<boolean> = ref(false);
 const history: Ref<HistoryEntryType[]> = ref([]);
+const gameEnd: Ref<boolean> = computed(() => {
+  return attemptCounts.value >= MAX_ATTEMPTS || guessedRight.value;
+});
 
 const confetti = useConfetti();
 </script>
 
 <template>
   <div>
+    <p class="info bold text-yellow" v-if="gameEnd">
+      Out of beer? Don’t worry, a new glass is ready every day!
+    </p>
     <p class="info">Guess the centiliters of a glass of beer in the 0-50 CL range</p>
     <BeerGlassComponent :beer-c-l="centiliters" />
 
@@ -124,6 +131,16 @@ const confetti = useConfetti();
   margin-bottom: 2rem;
   text-align: center;
 }
+
+.bold {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.text-yellow {
+  color: #efd002;
+}
+
 .attempts {
   margin-top: 2rem;
   display: flex;
