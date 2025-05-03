@@ -62,10 +62,7 @@ const bubbles = ref([
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.container {
   width: 200px;
-  margin-right: 10px;
   color: #505050;
 }
 .beer-borderbox {

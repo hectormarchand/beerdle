@@ -1,0 +1,19 @@
+{
+    "title": "Beerdle !",
+    "game": {
+        "tutorial-phrase": "Devine le volume en centilitres du verre de bière de 0 à 50 CL",
+        "clues": {
+            "freezing": "Gelé",
+            "cold": "Froid",
+            "getting_hot": "Ca devient chaud",
+            "hot": "Chaud",
+            "boiling": "Bouillant",
+            "yeah": "Youpiii"
+        },
+        "buttons": {
+            "guess": "Devine"
+        },
+        "attempts": "Essais",
+        "end-phrase": "Plus de bière ? Reviens demain, le verre se remplit chaque jour"
+    }
+}

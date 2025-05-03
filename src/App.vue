@@ -1,37 +1,23 @@
 <script setup lang="ts">
 import GameComponent from "@/components/GameComponent.vue";
-import BeerIcon from "./components/icons/BeerIcon.vue";
 import { Analytics } from "@vercel/analytics/vue";
+import HeaderComponent from "./components/HeaderComponent.vue";
 </script>
 
 <template>
   <Analytics />
-  <header>
-    <BeerIcon class="beer-icon" />
-    <h1>Beerdle !</h1>
-    <BeerIcon class="beer-icon" />
-  </header>
+  <HeaderComponent />
   <main>
     <GameComponent />
   </main>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  display: flex;
-  justify-content: center;
-}
-
-.beer-icon {
-  width: 1.8rem;
-  margin: 0 1rem;
-}
-
 main {
   margin-top: 2rem;
   display: flex;
-  justify-content: center;
-  max-width: 15rem;
+  flex-direction: column;
+  place-items: center;
+  max-width: 20rem;
 }
 </style>

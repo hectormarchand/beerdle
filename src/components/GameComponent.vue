@@ -10,7 +10,7 @@ const MAX_ATTEMPTS = 4;
 type HistoryEntryType = {
   attempt: `${number} CL`,
   icon: "lower" | "greater" | "guessed_right",
-  clue: "Freezing" | "Cold" | "Getting hot" | "Hot" | "Boiling" | "Yeeeeah"
+  clue: "freezing" | "cold" | "getting_hot" | "hot" | "boiling" | "yeah"
 }
 
 function getCentilitersOfTheDay(): number {
@@ -27,7 +27,7 @@ function getCentilitersOfTheDay(): number {
 }
 
 function doAttempt(): void {
-  if (!attempt.value) {
+  if (!attempt.value && attempt.value !== 0) {
     return;
   }
   if (attemptCounts.value >= MAX_ATTEMPTS) {
@@ -65,17 +65,17 @@ function getClue(attempt: number): HistoryEntryType["clue"] {
   const difference = Math.abs(centiliters.value - attempt);
 
   if (difference === 0) {
-    return "Yeeeeah";
+    return "yeah";
   } else if (difference <= 3) {
-    return "Boiling";
+    return "boiling";
   } else if (difference <= 10) {
-    return "Hot";
+    return "hot";
   } else if (difference <= 20) {
-    return "Getting hot";
+    return "getting_hot";
   } else if (difference <= 30) {
-    return "Cold";
+    return "cold";
   } else {
-    return "Freezing";
+    return "freezing";
   }
 }
 
@@ -92,36 +92,35 @@ const confetti = useConfetti();
 </script>
 
 <template>
-  <div>
-    <p class="info bold text-yellow" v-if="gameEnd">
-      Out of beer? Don’t worry, a new glass is ready every day!
-    </p>
-    <p class="info">Guess the centiliters of a glass of beer in the 0-50 CL range</p>
-    <BeerGlassComponent :beer-c-l="centiliters" />
+  <p class="info bold text-yellow" v-if="gameEnd">
+    {{ $t("game.end-phrase") }}
+  </p>
+  <p class="info">{{ $t("game.tutorial-phrase") }}</p>
+  <BeerGlassComponent :beer-c-l="centiliters" />
+  <div class="answer" v-if="gameEnd">{{ centiliters }}CL</div>
 
-    <div class="attempts">
-      <span>Attempts : {{ attemptCounts }}/{{ MAX_ATTEMPTS }}</span>
-    </div>
+  <div class="attempts">
+    <span>{{ $t("game.attempts") }} : {{ attemptCounts }}/{{ MAX_ATTEMPTS }}</span>
+  </div>
 
-    <form @submit.prevent="doAttempt()" class="guess">
-      <input v-model="attempt" type="number" class="input-field" />
-      <button type="submit">Guess</button>
-    </form>
+  <form @submit.prevent="doAttempt()" class="guess-form">
+    <input v-model="attempt" type="number" class="input-field" />
+    <button type="submit">{{ $t("game.buttons.guess") }}</button>
+  </form>
 
-    <div class="history">
-      <div class="history-entry" v-for="(historyEntry, index) in history" :key="index">
-        <span>{{ historyEntry.attempt }}</span>
-        <span v-if="historyEntry.icon === 'lower'">
-          <UpArrowIcon class="icon rotate-180" />
-        </span>
-        <span v-else-if="historyEntry.icon === 'guessed_right'">
-          <EqualIcon class="icon" />
-        </span>
-        <span v-else-if="historyEntry.icon === 'greater'">
-          <UpArrowIcon class="icon" />
-        </span>
-        <span>{{ historyEntry.clue }}</span>
-      </div>
+  <div class="history">
+    <div class="history-entry" v-for="(historyEntry, index) in history" :key="index">
+      <span>{{ historyEntry.attempt }}</span>
+      <span v-if="historyEntry.icon === 'lower'">
+        <UpArrowIcon class="icon rotate-180" />
+      </span>
+      <span v-else-if="historyEntry.icon === 'guessed_right'">
+        <EqualIcon class="icon" />
+      </span>
+      <span v-else-if="historyEntry.icon === 'greater'">
+        <UpArrowIcon class="icon" />
+      </span>
+      <span>{{ $t("game.clues." + historyEntry.clue) }}</span>
     </div>
   </div>
 </template>
@@ -148,13 +147,14 @@ const confetti = useConfetti();
   font-size: 1.1rem;
 }
 
-.guess {
+.guess-form {
   margin-top: 2rem;
   display: flex;
   justify-content: space-evenly;
+  width: 75%;
 }
 
-.guess button {
+.guess-form button {
   padding: 10px;
   border-radius: 10px;
   border-width: 0px;
@@ -162,6 +162,7 @@ const confetti = useConfetti();
 
 .history {
   margin-top: 2rem;
+  width: 90%;
 }
 
 /* From Uiverse.io by Allyhere */
@@ -181,7 +182,7 @@ const confetti = useConfetti();
 
 .history-entry {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 2fr;
   gap: 0.5rem;
   margin: 1rem 0;
 }
@@ -201,5 +202,26 @@ const confetti = useConfetti();
 
 .rotate-180 {
   transform: rotate(180deg);
+}
+
+.answer {
+  position: absolute;
+  top: 2.9em;
+  left: 50%;
+  font-size: 100px;
+  font-weight: bold;
+  color: rgb(245, 194, 17);
+  animation: pulse 1.5s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.5);
+  }
 }
 </style>

@@ -1,0 +1,19 @@
+{
+    "title": "Beerdle !",
+    "game": {
+        "tutorial-phrase": "Guess the centiliters of a glass of beer in the 0-50 CL range",
+        "clues": {
+            "freezing": "Freezing",
+            "cold": "Cold",
+            "getting_hot": "Getting hot",
+            "hot": "Hot",
+            "boiling": "Boiling",
+            "yeah": "Yeeeeah"
+        },
+        "buttons": {
+            "guess": "Guess"
+        },
+        "attempts": "Attempts",
+        "end-phrase": "Out of beer? Don’t worry, a new glass is ready every day!"
+    }
+}
