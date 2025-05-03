@@ -206,7 +206,7 @@ const confetti = useConfetti();
 
 .answer {
   position: absolute;
-  top: 2.9em;
+  top: 3.25em;
   left: 50%;
   font-size: 100px;
   font-weight: bold;

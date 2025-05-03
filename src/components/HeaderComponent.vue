@@ -24,6 +24,18 @@ function buildLocaleOptions(): { label: string; value: string }[] {
       <h1>{{ $t("title") }}</h1>
       <BeerIcon class="beer-icon" />
     </div>
+
+    <div class="select-i18n">
+      <div
+        v-for="locale in $i18n.availableLocales"
+        :key="`locale-${locale}`"
+        class="locale"
+        :class="{ 'locale-active': locale === $i18n.locale }"
+        @click="$i18n.locale = locale"
+      >
+        <span>{{ locale.toLocaleUpperCase() }}</span>
+      </div>
+    </div>
   </header>
 </template>
 
@@ -43,5 +55,20 @@ header {
 .beer-icon {
   width: 1.8rem;
   margin: 0 1rem;
+}
+
+.select-i18n {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.locale {
+  cursor: pointer;
+}
+
+.locale-active {
+  border-bottom: 3px solid #f7a900;
 }
 </style>
