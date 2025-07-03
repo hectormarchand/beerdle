@@ -100,7 +100,7 @@ const bubbles = ref([
   height: 130px;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  z-index: 99;
+  z-index: 10;
   margin: auto;
   top: 0;
   right: 0;

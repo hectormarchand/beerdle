@@ -212,7 +212,7 @@ const confetti = useConfetti();
   font-weight: bold;
   color: rgb(245, 194, 17);
   animation: pulse 1.5s ease-in-out infinite;
-  z-index: 10;
+  z-index: 20;
 }
 
 @keyframes pulse {

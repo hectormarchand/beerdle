@@ -1,20 +1,5 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import BeerIcon from "./icons/BeerIcon.vue";
-
-const i18n = useI18n();
-
-const localeToLabelMap: { [key: string]: string } = {
-  fr: "Français",
-  en: "English",
-};
-
-function buildLocaleOptions(): { label: string; value: string }[] {
-  return i18n.availableLocales.map((locale) => ({
-    label: localeToLabelMap[locale] || locale,
-    value: locale,
-  }));
-}
 </script>
 
 <template>
