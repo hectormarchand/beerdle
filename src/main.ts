@@ -8,7 +8,7 @@ import fr from "./i18n/fr.json"
 import en from "./i18n/en.json"
 
 const i18n = createI18n({
-    locale: "fr",
+    locale: "en",
     fallbackLocale: "en",
     messages: {
         fr: fr,
