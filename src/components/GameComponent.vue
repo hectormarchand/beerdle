@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import BeerGlassComponent from "@/components/BeerGlassComponent.vue";
-import { computed, ref, type Ref } from "vue";
+import { computed, ref, watch, type Ref } from "vue";
 import UpArrowIcon from "./icons/UpArrowIcon.vue";
 import EqualIcon from "./icons/EqualIcon.vue";
 import { useConfetti } from "@/composables/useConfetti";
 
-const MAX_ATTEMPTS = 4;
-
 type HistoryEntryType = {
-  attempt: `${number} CL`,
+  attempt: number,
   icon: "lower" | "greater" | "guessed_right",
   clue: "freezing" | "cold" | "getting_hot" | "hot" | "boiling" | "yeah"
 }
@@ -18,7 +16,6 @@ function getCentilitersOfTheDay(): number {
   let hash = today.getFullYear() * 19 + today.getMonth() * 43 + today.getDay() * 71;
   hash = Math.cos(hash) + 1; // [0-2]
 
-  const HASH_MAX = 2;
   const CENTILITERS_MAX = 50;
   const CENTILITERS_MIN = 10;
   const centiliters = CENTILITERS_MIN + hash * (CENTILITERS_MAX - CENTILITERS_MIN) / 2; // [10-50]
@@ -33,25 +30,18 @@ function doAttempt(): void {
   if (attemptCounts.value >= MAX_ATTEMPTS) {
     return;
   }
-  attempt.value  = +attempt.value;
-
-  guessedRight.value = centiliters.value === attempt.value;
-  attemptCounts.value = attemptCounts.value + 1;
+  attempt.value = +attempt.value;
 
   // Update history
   const icon = getIcon(attempt.value);
   const clue = getClue(attempt.value);
   history.value.push({
-    attempt: `${attempt.value} CL`,
+    attempt: attempt.value,
     icon: icon,
     clue: clue
   });
 
   attempt.value = undefined;
-
-  if (guessedRight.value) {
-    confetti?.start();
-  }
 }
 
 function getIcon(attempt: number): HistoryEntryType["icon"] {
@@ -79,25 +69,28 @@ function getClue(attempt: number): HistoryEntryType["clue"] {
   }
 }
 
+const MAX_ATTEMPTS = 4;
 const centiliters: Ref<number> = import.meta.env.DEV ? ref(Math.floor(Math.random() * 40 + 10)) : ref(getCentilitersOfTheDay());
-const attemptCounts: Ref<number> = ref(0);
-const attempt: Ref<number | undefined> = ref();
-const guessedRight: Ref<boolean> = ref(false);
+
 const history: Ref<HistoryEntryType[]> = ref([]);
-const gameEnd: Ref<boolean> = computed(() => {
-  return attemptCounts.value >= MAX_ATTEMPTS || guessedRight.value;
-});
+const attemptCounts: Ref<number> = computed(() => history.value.length);
+const hasWon: Ref<boolean> = computed(() => history.value.some(h => h.attempt === centiliters.value));
+const hasLost: Ref<boolean> = computed(() => !hasWon.value && attemptCounts.value >= MAX_ATTEMPTS);
+
+const attempt: Ref<number | undefined> = ref();
 
 const confetti = useConfetti();
+
+watch(hasWon, (newHasWon) => {
+  if (newHasWon) {
+    confetti?.start();
+  }
+})
 </script>
 
 <template>
-  <p class="info bold text-yellow" v-if="gameEnd">
-    {{ $t("game.end-phrase") }}
-  </p>
   <p class="info">{{ $t("game.tutorial-phrase") }}</p>
   <BeerGlassComponent :beer-c-l="centiliters" />
-  <div class="answer" v-if="gameEnd">{{ centiliters }}CL</div>
 
   <div class="attempts">
     <span>{{ $t("game.attempts") }} : {{ attemptCounts }}/{{ MAX_ATTEMPTS }}</span>
@@ -110,7 +103,7 @@ const confetti = useConfetti();
 
   <div class="history">
     <div class="history-entry" v-for="(historyEntry, index) in history" :key="index">
-      <span>{{ historyEntry.attempt }}</span>
+      <span>{{ historyEntry.attempt + " CL" }}</span>
       <span v-if="historyEntry.icon === 'lower'">
         <UpArrowIcon class="icon rotate-180" />
       </span>
@@ -123,6 +116,8 @@ const confetti = useConfetti();
       <span>{{ $t("game.clues." + historyEntry.clue) }}</span>
     </div>
   </div>
+
+  <p v-if="hasLost">{{ $t("game.answer", { cl: centiliters }) }}</p>
 </template>
 
 <style scoped>
@@ -155,8 +150,8 @@ const confetti = useConfetti();
 }
 
 .guess-form button {
-  padding: 10px;
-  border-radius: 10px;
+  padding: 0.75em;
+  border-radius: 0.3em;
   border-width: 0px;
 }
 
@@ -202,26 +197,5 @@ const confetti = useConfetti();
 
 .rotate-180 {
   transform: rotate(180deg);
-}
-
-.answer {
-  position: absolute;
-  top: 3.25em;
-  left: 50%;
-  font-size: 100px;
-  font-weight: bold;
-  color: rgb(245, 194, 17);
-  animation: pulse 1.5s ease-in-out infinite;
-  z-index: 20;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: translateX(-50%) scale(1);
-  }
-  50% {
-    transform: translateX(-50%) scale(1.5);
-  }
 }
 </style>

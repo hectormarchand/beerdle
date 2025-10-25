@@ -8,12 +8,12 @@
             "getting_hot": "Getting hot",
             "hot": "Hot",
             "boiling": "Boiling",
-            "yeah": "Yeeeeah"
+            "yeah": "🥳 Yeeeeah 🥳"
         },
         "buttons": {
             "guess": "Guess"
         },
         "attempts": "Attempts",
-        "end-phrase": "Out of beer? Don’t worry, a new glass is ready every day!"
+        "answer": "💀 The answer was {cl} CL 💀"
     }
 }

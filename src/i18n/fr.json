@@ -8,12 +8,12 @@
             "getting_hot": "Ca devient chaud",
             "hot": "Chaud",
             "boiling": "Bouillant",
-            "yeah": "Youpiii"
+            "yeah": "🥳 Youpiii 🥳"
         },
         "buttons": {
             "guess": "Devine"
         },
         "attempts": "Essais",
-        "end-phrase": "Plus de bière ? Reviens demain, le verre se remplit chaque jour"
+        "answer": "💀 La réponse était {cl} CL 💀"
     }
 }
